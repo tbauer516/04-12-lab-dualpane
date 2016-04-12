@@ -10,12 +10,19 @@ import android.widget.EditText;
 public class MainActivity extends AppCompatActivity implements MoviesFragment.OnMovieSelectedListener {
 
     private static final String TAG = "MainActivity";
+    private boolean dualpane;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dualpane = false;
+        View dualPaneView = findViewById(R.id.container_right);
+        if (dualPaneView != null && dualPaneView.getVisibility() == View.VISIBLE) {
+            dualpane = true;
+        }
 
         MoviesFragment fragment = (MoviesFragment)getSupportFragmentManager().findFragmentByTag("MoviesFragment");
         if(fragment == null) {
@@ -58,8 +65,13 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
         DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(bundle);
 
+        int fragID = R.id.container;
+        if (dualpane) {
+            fragID = R.id.container_right;
+        }
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, detailFragment, null)
+                .replace(fragID, detailFragment, null)
                 .addToBackStack(null)
                 .commit();
 
